@@ -30,7 +30,8 @@ script:
   - grunt build
 
 after_success:
-  - shippable_retry ssh conf4it@conf4itweb.cloudapp.net 'mkdir ~/devops'
+  - shippable_retry ssh conf4it@conf4itweb.cloudapp.net 'ls /var/www/html/'
+  - shippable_retry ssh conf4it@conf4itweb.cloudapp.net 'mkdir devops'
   - shippable_retry scp -r ./dist/* conf4it@conf4itweb.cloudapp.net:~/devops/
   - shippable_retry ssh conf4it@conf4itweb.cloudapp.net 'sudo rm -rf /var/www/html/devops/'
   - shippable_retry ssh conf4it@conf4itweb.cloudapp.net 'sudo mv ~/devops /var/www/html/'
