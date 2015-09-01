@@ -1,0 +1,35 @@
+# exclude
+branches:
+  except:
+    - development
+
+# include
+branches:
+  only:
+    - master
+
+# language setting
+language: node_js
+
+# version numbers, testing against two versions of node
+#node_js:
+#  - 0.12.7
+
+before_install:
+  - sudo gem install compass
+  - mkdir -p ~/.nvm/versions
+  - source ~/.nvm/nvm.sh
+#  - shippable_retry nvm install 0.12.7
+  - shippable_retry npm install -g grunt-cli
+  - shippable_retry npm install -g bower
+
+before_script:
+  - shippable_retry bower install
+
+script:
+  - grunt build
+
+after_success:
+  - shippable_retry scp -r ./dist/* conf4it@conf4itweb.cloudapp.net:~/devops/
+  - shippable_retry ssh conf4it@conf4itweb.cloudapp.net 'sudo rm -rf /var/www/html/devops/'
+  - shippable_retry ssh conf4it@conf4itweb.cloudapp.net 'sudo mv ~/devops /var/www/html/'
