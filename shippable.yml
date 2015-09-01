@@ -17,8 +17,8 @@ language: node_js
 
 before_install:
   - sudo gem install compass
-  - mkdir -p ~/.nvm/versions
-  - source ~/.nvm/nvm.sh
+#  - mkdir -p ~/.nvm/versions
+#  - source ~/.nvm/nvm.sh
 #  - shippable_retry nvm install 0.12.7
   - shippable_retry npm install -g grunt-cli
   - shippable_retry npm install -g bower
@@ -30,6 +30,7 @@ script:
   - grunt build
 
 after_success:
+  - shippable_retry ssh conf4it@conf4itweb.cloudapp.net 'mkdir ~/devops'
   - shippable_retry scp -r ./dist/* conf4it@conf4itweb.cloudapp.net:~/devops/
   - shippable_retry ssh conf4it@conf4itweb.cloudapp.net 'sudo rm -rf /var/www/html/devops/'
   - shippable_retry ssh conf4it@conf4itweb.cloudapp.net 'sudo mv ~/devops /var/www/html/'
